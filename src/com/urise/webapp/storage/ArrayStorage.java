@@ -19,32 +19,86 @@ public class ArrayStorage {
         count = 0;
     }
 
+    public void update(Resume r){
+        boolean isExist = false;
+        for (int i = 0; i < count; i++) {
+            if (r == storage[i]){
+                isExist = true;
+                break;
+            }
+        }
+        if (!isExist){
+            System.out.println("Error: this resume with " + r.getUuid() + " not present");
+        }
+    }
+
     public void save(Resume r) {
-        storage[count] = r;
-        count++;
+        boolean isNotExist = true;
+        for (int i = 0; i < count; i++) {
+            if (r.equals(storage[i]) || r.getUuid().equals(storage[i].getUuid())){
+                isNotExist = false;
+            }
+        }
+
+        boolean isComplete = false;
+        if (count == 10000){
+            isComplete = true;
+        }
+
+        if (isNotExist && !isComplete){
+            storage[count] = r;
+            count++;
+        } else {
+            System.out.println("Error: this resume with " + r.getUuid() + " is present or storage is complete");
+        }
     }
 
     public Resume get(String uuid) {
+        boolean isExist = false;
         for (int i = 0; i < count; i++) {
-            if (Objects.equals(storage[i].getUuid(), uuid)) {
-                return storage[i];
+            if (uuid.equals(storage[i].getUuid())){
+                isExist = true;
+                break;
             }
         }
+
+        if (isExist){
+            for (int i = 0; i < count; i++) {
+                if (Objects.equals(storage[i].getUuid(), uuid)) {
+                    return storage[i];
+                }
+            }
+        }
+        System.out.println("Error: this resume not present");
         return null;
     }
 
     public void delete(String uuid) {
+        boolean isExist = false;
         for (int i = 0; i < count; i++) {
-            if (storage[i].uuid == uuid) {
-
-                for (int j = i + 1; j < count; j++) {
-                    storage[j - 1] = storage[j];
-                }
-                storage[count -1] = null;
-                count--;
+            if (uuid.equals(storage[i].getUuid())){
+                isExist = true;
                 break;
             }
         }
+
+        if (isExist){
+            for (int i = 0; i < count; i++) {
+                if (storage[i].uuid == uuid) {
+
+                    for (int j = i + 1; j < count; j++) {
+                        storage[j - 1] = storage[j];
+                    }
+                    storage[count -1] = null;
+                    count--;
+                    break;
+                }
+            }
+        } else {
+            System.out.println("Error: this resume with uuid: " + uuid + " not present");
+        }
+
+
     }
 
     /**
