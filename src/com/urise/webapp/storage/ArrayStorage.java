@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -13,39 +14,43 @@ public class ArrayStorage {
     private int count = 0;
 
     public void clear() {
-        for (int i = 0; i < count; i++) {
-            storage[i] = null;
-        }
+        Resume[] tempStorage = Arrays.copyOf(storage, count);
+        Arrays.fill(tempStorage, null);
         count = 0;
     }
 
-    public void update(Resume r){
-        boolean isExist = false;
+    public boolean isExistResume(Resume r) {
         for (int i = 0; i < count; i++) {
-            if (r == storage[i]){
-                isExist = true;
-                break;
+            if (r.equals(storage[i]) || r.getUuid().equals(storage[i].getUuid())) {
+                return true;
             }
         }
-        if (!isExist){
+        return false;
+    }
+
+    public boolean isExistID(String uuid) {
+        for (int i = 0; i < count; i++) {
+            if (uuid.equals(storage[i].getUuid())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void update(Resume r) {
+        if (!isExistResume(r)) {
             System.out.println("Error: this resume with " + r.getUuid() + " not present");
         }
     }
 
     public void save(Resume r) {
-        boolean isNotExist = true;
-        for (int i = 0; i < count; i++) {
-            if (r.equals(storage[i]) || r.getUuid().equals(storage[i].getUuid())){
-                isNotExist = false;
-            }
-        }
 
         boolean isComplete = false;
-        if (count == 10000){
+        if (count == 10000) {
             isComplete = true;
         }
 
-        if (isNotExist && !isComplete){
+        if (!isExistResume(r) && !isComplete) {
             storage[count] = r;
             count++;
         } else {
@@ -54,15 +59,7 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        boolean isExist = false;
-        for (int i = 0; i < count; i++) {
-            if (uuid.equals(storage[i].getUuid())){
-                isExist = true;
-                break;
-            }
-        }
-
-        if (isExist){
+        if (isExistID(uuid)) {
             for (int i = 0; i < count; i++) {
                 if (Objects.equals(storage[i].getUuid(), uuid)) {
                     return storage[i];
@@ -74,22 +71,14 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        boolean isExist = false;
-        for (int i = 0; i < count; i++) {
-            if (uuid.equals(storage[i].getUuid())){
-                isExist = true;
-                break;
-            }
-        }
-
-        if (isExist){
+        if (isExistID(uuid)) {
             for (int i = 0; i < count; i++) {
                 if (storage[i].uuid == uuid) {
 
                     for (int j = i + 1; j < count; j++) {
                         storage[j - 1] = storage[j];
                     }
-                    storage[count -1] = null;
+                    storage[count - 1] = null;
                     count--;
                     break;
                 }
@@ -97,19 +86,13 @@ public class ArrayStorage {
         } else {
             System.out.println("Error: this resume with uuid: " + uuid + " not present");
         }
-
-
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] fullStorage = new Resume[count];
-        for (int i = 0; i < count; i++) {
-            fullStorage[i] = storage[i];
-        }
-        return fullStorage;
+        return Arrays.copyOf(storage, count);
     }
 
     public int size() {
