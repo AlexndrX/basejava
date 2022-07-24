@@ -65,6 +65,9 @@ public class ArrayStorage {
             storage[count - 1] = null;
             count--;
         }
+        storage[index] = storage[count - 1];
+        storage[count - 1] = null;
+        count--;
     }
 
     /**
