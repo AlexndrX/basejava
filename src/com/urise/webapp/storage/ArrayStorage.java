@@ -8,13 +8,13 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    static final int STORAGE_LIMIT = 10000;
+    private static final int STORAGE_LIMIT = 10000;
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
 
     private int count = 0;
 
     public void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, count, null);
         count = 0;
     }
 
