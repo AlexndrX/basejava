@@ -7,11 +7,6 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void clear() {
-
-    }
-
-    @Override
     protected int findIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
@@ -19,22 +14,28 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public void update(Resume r) {
+    protected void addResume(Resume r) {
+        if (count == 0){
+            storage[count] = r;
+            count++;
+            return;
+        }
+        int index = Math.abs(Arrays.binarySearch(storage, 0, count, r) + 1);
 
+        for (int i = count; i > index; i--) {
+            storage[i] = storage[i - 1];
+        }
+        storage[index] = r;
+        count++;
     }
 
     @Override
-    public void save(Resume r) {
-
+    protected void shift(int index) {
+        for (int i = index; i < count; i++) {
+            storage[i] = storage[i + 1];
+        }
+        storage[count - 1] = null;
+        count--;
     }
 
-    @Override
-    public void delete(String uuid) {
-
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return new Resume[0];
-    }
 }
