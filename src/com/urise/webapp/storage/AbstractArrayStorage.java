@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -18,8 +21,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume r) {
         int index = findIndex(r.getUuid());
         if (index < 0) {
-            System.out.println("Error: this resume with " + r.getUuid() + " not present");
-            return;
+            throw new NotExistStorageException(r.getUuid());
         }
         storage[index] = r;
     }
@@ -27,9 +29,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume r) {
         int index = findIndex(r.getUuid());
         if (count == STORAGE_LIMIT) {
-            System.out.println("Error: storage is complete");
+            throw new StorageException(r.getUuid(), "");
         } else if (index >= 0) {
-            System.out.println("Error: this resume with " + r.getUuid() + " is present");
+            throw new ExistStorageException(r.getUuid());
         } else {
             addResume(r, index);
             count++;
@@ -39,8 +41,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
-            System.out.println("Error: this resume not present");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -48,7 +49,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
-            System.out.println("Error: this resume with uuid: " + uuid + " not present");
+            throw new NotExistStorageException(uuid);
         } else {
             deleteResume(index);
             storage[count - 1] = null;

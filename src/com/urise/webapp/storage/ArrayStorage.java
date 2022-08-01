@@ -25,9 +25,4 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected void deleteResume(int index) {
         storage[index] = storage[count - 1];
     }
-
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-
 }
