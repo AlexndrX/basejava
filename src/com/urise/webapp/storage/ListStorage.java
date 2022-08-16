@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListStorage implements Storage {
+public class ListStorage extends AbstractStorage {
     List<Resume> resumeList = new ArrayList<>();
 
     @Override
@@ -21,38 +21,11 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public void update(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        resumeList.add(index, r);
-    }
-
-    @Override
     public void save(Resume r) {
         if (resumeList.contains(r)) {
             throw new ExistStorageException(r.getUuid());
         }
         resumeList.add(r);
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return resumeList.get(index);
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        resumeList.remove(index);
     }
 
     @Override
@@ -66,12 +39,27 @@ public class ListStorage implements Storage {
         return resumeList.size();
     }
 
-    int findIndex(String uuid) {
+    protected int findIndex(String uuid) {
         for (int i = 0; i < resumeList.size(); i++) {
             if (uuid.equals(resumeList.get(i).getUuid())) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    protected void addResume(Resume r, int index) {
+        resumeList.add(index, r);
+    }
+
+    @Override
+    protected Resume getResume(int index) {
+        return resumeList.get(index);
+    }
+
+    @Override
+    protected void deleteResume(int index) {
+        resumeList.remove(index);
     }
 }

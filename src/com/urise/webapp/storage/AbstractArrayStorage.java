@@ -7,7 +7,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -18,14 +18,7 @@ public abstract class AbstractArrayStorage implements Storage {
         count = 0;
     }
 
-    public void update(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        storage[index] = r;
-    }
-
+    @Override
     public void save(Resume r) {
         int index = findIndex(r.getUuid());
         if (count == STORAGE_LIMIT) {
@@ -38,37 +31,19 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
-    }
-
-    public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deleteResume(index);
-            storage[count - 1] = null;
-            count--;
-        }
-    }
-
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, count);
     }
 
+    @Override
     public int size() {
         return count;
     }
 
-    protected abstract int findIndex(String uuid);
-
-    protected abstract void deleteResume(int index);
-
-    protected abstract void addResume(Resume r, int index);
+    @Override
+    protected Resume getResume(int index) {
+        return storage[index];
+    }
 
 }
