@@ -1,43 +1,53 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        int index = findIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        addResume(r, index);
+        Object searchKey = getExistingSearchKey(r.getUuid());
+        doUpdate(searchKey, r);
+    }
+
+    @Override
+    public void save(Resume r) {
+        Object searchKey = getNotExistingSearchKey(r.getUuid());
+        doSave(searchKey, r);
     }
 
     @Override
     public Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getResume(index);
+        Object searchKey = getExistingSearchKey(uuid);
+        return doGet(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deleteResume(index);
-        }
+        Object searchKey = getExistingSearchKey(uuid);
+        doDelete(searchKey);
     }
 
-    protected abstract int findIndex(String uuid);
+    protected abstract Object findIndex(String uuid);
 
-    protected abstract void addResume(Resume r, int index);
+    protected abstract Resume doGet(Object searchKey);
 
-    protected abstract Resume getResume(int index);
+    protected abstract void doUpdate(Object searchKey, Resume resume);
 
-    protected abstract void deleteResume(int index);
+    protected abstract void doSave(Object searchKey, Resume resume);
+
+    protected abstract void doDelete(Object searchKey);
+
+    public Object getExistingSearchKey(String uuid) {
+        return ExistSearchKey(uuid);
+    }
+
+    public Object getNotExistingSearchKey(String uuid) {
+        return NotExistSearchKey(uuid);
+    }
+
+    protected abstract Object ExistSearchKey(String uuid);
+
+    protected abstract Object NotExistSearchKey(String uuid);
+
 }

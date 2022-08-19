@@ -8,7 +8,7 @@ import com.urise.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int findIndex(String uuid) {
+    protected Object findIndex(String uuid) {
         for (int i = 0; i < count; i++) {
             if (uuid.equals(storage[i].getUuid())) {
                 return i;
@@ -20,6 +20,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void addResume(Resume r, int index) {
         storage[count] = r;
+        count++;
     }
 
     @Override
