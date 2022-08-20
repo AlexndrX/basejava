@@ -35,7 +35,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume){
+    protected void doUpdate(Object searchKey, Resume resume) {
         addResume(resume, (Integer) searchKey);
     }
 

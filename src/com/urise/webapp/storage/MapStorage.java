@@ -4,11 +4,12 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ListStorage extends AbstractStorage {
-    List<Resume> storage = new ArrayList<>();
+public class MapStorage extends AbstractStorage {
+
+    Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -18,7 +19,7 @@ public class ListStorage extends AbstractStorage {
     @Override
     public Resume[] getAll() {
         int size = storage.size();
-        return storage.toArray(new Resume[size]);
+        return storage.values().toArray(new Resume[size]);
     }
 
     @Override
@@ -27,9 +28,9 @@ public class ListStorage extends AbstractStorage {
     }
 
     protected Object findIndex(String uuid) {
-        for (int i = 0; i < storage.size(); i++) {
-            if (uuid.equals(storage.get(i).getUuid())) {
-                return i;
+        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
+            if (entry.getKey().equals(uuid)) {
+                return entry.getValue();
             }
         }
         return -1;
@@ -37,39 +38,42 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return storage.get((Integer) searchKey);
+        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
+            if (entry.getKey().equals(searchKey)) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     @Override
     protected void doUpdate(Object searchKey, Resume resume) {
-        storage.set((Integer) searchKey, resume);
+        storage.replace((String) searchKey, resume);
     }
 
     @Override
     protected void doSave(Object searchKey, Resume resume) {
-        storage.add((Integer) searchKey, resume);
+        storage.put((String) searchKey, resume);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        storage.remove((int) searchKey);
+        storage.remove((String) searchKey);
     }
 
     @Override
     protected Object ExistSearchKey(String uuid) {
-        int index = (int) findIndex(uuid);
-        if (index < 0) {
+        if (!storage.containsKey(uuid)) {
             throw new NotExistStorageException(uuid);
         }
-        return index;
+        return findIndex(uuid);
     }
 
     @Override
     protected Object NotExistSearchKey(String uuid) {
-        int index = (int) findIndex(uuid);
-        if (index >= 0) {
+        if (storage.containsKey(uuid)) {
             throw new ExistStorageException(uuid);
         }
-        return storage.size();
+        return findIndex(uuid);
     }
 }
