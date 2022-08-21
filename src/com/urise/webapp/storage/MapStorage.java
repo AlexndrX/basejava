@@ -5,11 +5,12 @@ import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
 
-    Map<String, Resume> storage = new HashMap<>();
+    Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -28,22 +29,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     protected Object findIndex(String uuid) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getKey().equals(uuid)) {
-                return entry.getValue();
-            }
-        }
-        return -1;
+        return uuid;
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getKey().equals(searchKey)) {
-                return entry.getValue();
-            }
-        }
-        return null;
+        return storage.get((String) searchKey);
     }
 
     @Override
@@ -66,7 +57,7 @@ public class MapStorage extends AbstractStorage {
         if (!storage.containsKey(uuid)) {
             throw new NotExistStorageException(uuid);
         }
-        return findIndex(uuid);
+        return uuid;
     }
 
     @Override
@@ -74,6 +65,6 @@ public class MapStorage extends AbstractStorage {
         if (storage.containsKey(uuid)) {
             throw new ExistStorageException(uuid);
         }
-        return findIndex(uuid);
+        return uuid;
     }
 }
