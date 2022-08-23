@@ -47,7 +47,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Object searchKey, Resume resume) {
-        storage.add((Integer) searchKey, resume);
+        storage.add(resume);
     }
 
     @Override
@@ -56,20 +56,11 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object ExistSearchKey(String uuid) {
+    protected boolean isExist(String uuid) {
         int index = (int) findIndex(uuid);
         if (index < 0) {
-            throw new NotExistStorageException(uuid);
+            return false;
         }
-        return index;
-    }
-
-    @Override
-    protected Object NotExistSearchKey(String uuid) {
-        int index = (int) findIndex(uuid);
-        if (index >= 0) {
-            throw new ExistStorageException(uuid);
-        }
-        return storage.size();
+        return true;
     }
 }

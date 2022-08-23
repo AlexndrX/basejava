@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
 
-    Map<String, Resume> storage = new LinkedHashMap<>();
+    private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -19,8 +19,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        int size = storage.size();
-        return storage.values().toArray(new Resume[size]);
+        return storage.values().toArray(new Resume[0]);
     }
 
     @Override
@@ -53,18 +52,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object ExistSearchKey(String uuid) {
-        if (!storage.containsKey(uuid)) {
-            throw new NotExistStorageException(uuid);
-        }
-        return uuid;
-    }
-
-    @Override
-    protected Object NotExistSearchKey(String uuid) {
-        if (storage.containsKey(uuid)) {
-            throw new ExistStorageException(uuid);
-        }
-        return uuid;
+    protected boolean isExist(String uuid) {
+        return storage.containsKey(uuid);
     }
 }

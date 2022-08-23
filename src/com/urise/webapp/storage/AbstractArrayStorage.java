@@ -41,6 +41,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Object searchKey, Resume resume) {
+        if (count == STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", resume.getUuid());
+        }
         addResume(resume, (Integer) searchKey);
     }
 
@@ -54,22 +57,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void deleteResume(int index);
 
     @Override
-    protected Object ExistSearchKey(String uuid) {
+    protected boolean isExist(String uuid) {
         int index = (int) findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return index;
-    }
-
-    @Override
-    protected Object NotExistSearchKey(String uuid) {
-        int index = (int) findIndex(uuid);
-        if (count == STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", uuid);
-        } else if (index >= 0) {
-            throw new ExistStorageException(uuid);
-        }
-        return index;
+        return index >= 0;
     }
 }
