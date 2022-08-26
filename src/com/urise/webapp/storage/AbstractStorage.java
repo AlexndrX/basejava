@@ -30,16 +30,6 @@ public abstract class AbstractStorage implements Storage {
         doDelete(searchKey);
     }
 
-    protected abstract Object findIndex(String uuid);
-
-    protected abstract Resume doGet(Object searchKey);
-
-    protected abstract void doUpdate(Object searchKey, Resume resume);
-
-    protected abstract void doSave(Object searchKey, Resume resume);
-
-    protected abstract void doDelete(Object searchKey);
-
     public Object getExistingSearchKey(String uuid) {
         if (!isExist(uuid)) {
             throw new NotExistStorageException(uuid);
@@ -53,6 +43,16 @@ public abstract class AbstractStorage implements Storage {
         }
         return findIndex(uuid);
     }
+
+    protected abstract Object findIndex(String uuid);
+
+    protected abstract Resume doGet(Object searchKey);
+
+    protected abstract void doUpdate(Object searchKey, Resume r);
+
+    protected abstract void doSave(Object searchKey, Resume r);
+
+    protected abstract void doDelete(Object searchKey);
 
     protected abstract boolean isExist(String uuid);
 }
