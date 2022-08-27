@@ -1,14 +1,12 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ListStorage extends AbstractStorage {
-    List<Resume> storage = new ArrayList<>();
+
+    private final List<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -16,9 +14,10 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
+    public List<Resume> getAllSorted() {
+        storage.sort(resumeComparator);
         int size = storage.size();
-        return storage.toArray(new Resume[size]);
+        return List.of(storage.toArray(new Resume[size]));
     }
 
     @Override

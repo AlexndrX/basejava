@@ -2,9 +2,12 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage {
 
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
@@ -25,8 +28,9 @@ public class MapStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected Object findIndex(String uuid) {
-        return uuid;
+    @Override
+    protected Object findIndex(String fullName) {
+        return fullName;
     }
 
     @Override
@@ -35,13 +39,13 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage.replace((String) searchKey, resume);
+    protected void doUpdate(Object searchKey, Resume r) {
+        storage.replace((String) searchKey, r);
     }
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
-        storage.put((String) searchKey, resume);
+    protected void doSave(Object searchKey, Resume r) {
+        storage.put((String) searchKey, r);
     }
 
     @Override
@@ -50,7 +54,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        return storage.containsKey(uuid);
+    protected boolean isExist(String fullName) {
+        return storage.containsKey(fullName);
     }
 }
