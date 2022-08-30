@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage {
 
-    private final Map<String, Resume> storage = new LinkedHashMap<>();
+    private final Map<Resume, String> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -17,8 +17,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>(storage.values());
+    protected List<Resume> doSortList() {
+        List<Resume> resumes = new ArrayList<>(storage.keySet());
         resumes.sort(resumeComparator);
         return List.copyOf(resumes);
     }
@@ -29,32 +29,40 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object findIndex(String fullName) {
-        return fullName;
+    protected Resume findIndex(String uuid) {
+        for (Map.Entry<Resume, String> entry : storage.entrySet()) {
+            if (entry.getValue().equals(uuid)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return storage.get((String) searchKey);
+        if (storage.containsKey((Resume) searchKey)) {
+            return (Resume) searchKey;
+        }
+        return null;
     }
 
     @Override
     protected void doUpdate(Object searchKey, Resume r) {
-        storage.replace((String) searchKey, r);
+        storage.replace((Resume) searchKey, ((Resume) searchKey).getUuid());
     }
 
     @Override
     protected void doSave(Object searchKey, Resume r) {
-        storage.put((String) searchKey, r);
+        storage.put((Resume) searchKey, ((Resume) searchKey).getUuid());
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        storage.remove((String) searchKey);
+        storage.remove((Resume) searchKey);
     }
 
     @Override
-    protected boolean isExist(String fullName) {
-        return storage.containsKey(fullName);
+    protected boolean isExist(Object searchKey) {
+        return storage.containsKey((Resume) searchKey);
     }
 }

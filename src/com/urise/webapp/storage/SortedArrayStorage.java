@@ -11,7 +11,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             r1.getUuid().compareTo(r2.getUuid());
 
     @Override
-    protected Object findIndex(String uuid) {
+    protected Integer findIndex(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, count, searchKey, RESUME_COMPARATOR);
     }

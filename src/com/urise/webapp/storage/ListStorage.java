@@ -14,7 +14,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
+    public List<Resume> doSortList() {
         storage.sort(resumeComparator);
         int size = storage.size();
         return List.of(storage.toArray(new Resume[size]));
@@ -26,13 +26,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object findIndex(String uuid) {
+    protected Integer findIndex(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (uuid.equals(storage.get(i).getUuid())) {
                 return i;
             }
         }
-        return -1;
+        return null;
     }
 
     @Override
@@ -56,8 +56,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        int index = (int) findIndex(uuid);
-        return index >= 0;
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 }

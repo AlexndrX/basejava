@@ -1,6 +1,5 @@
 package com.urise.webapp.model;
 
-import java.util.Comparator;
 import java.util.UUID;
 
 /**
@@ -25,6 +24,8 @@ public class Resume {
         this.fullName = fullName;
     }
 
+
+
     public String getUuid() {
         return uuid;
     }
@@ -40,15 +41,12 @@ public class Resume {
 
         Resume resume = (Resume) o;
 
-        if (!uuid.equals(resume.uuid)) return false;
-        return fullName.equals(resume.fullName);
+        return uuid.equals(resume.uuid);
     }
 
     @Override
     public int hashCode() {
-        int result = uuid.hashCode();
-        result = 31 * result + fullName.hashCode();
-        return result;
+        return uuid.hashCode();
     }
 
     @Override

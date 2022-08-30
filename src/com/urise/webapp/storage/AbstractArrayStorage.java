@@ -19,7 +19,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
+    public List<Resume> doSortList() {
         Arrays.sort(storage, resumeComparator);
         return Arrays.asList(Arrays.copyOf(storage, count));
     }
@@ -57,8 +57,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void deleteResume(int index);
 
     @Override
-    protected boolean isExist(String uuid) {
-        int index = (int) findIndex(uuid);
-        return index >= 0;
+    protected boolean isExist(Object searchKey) {
+        return (Integer) searchKey >= 0;
     }
 }
