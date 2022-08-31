@@ -14,10 +14,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> doSortList() {
-        List<Resume> resumes = new ArrayList<>(storage.values());
-        resumes.sort(resumeComparator);
-        return List.copyOf(resumes);
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -25,7 +23,7 @@ public class MapStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected Object findIndex(String uuid) {
+    protected Object findSearchKey(String uuid) {
         return uuid;
     }
 
@@ -35,13 +33,13 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage.replace((String) searchKey, resume);
+    protected void doUpdate(Object searchKey, Resume r) {
+        storage.replace((String) searchKey, r);
     }
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
-        storage.put((String) searchKey, resume);
+    protected void doSave(Object searchKey, Resume r) {
+        storage.put((String) searchKey, r);
     }
 
     @Override

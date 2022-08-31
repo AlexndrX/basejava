@@ -14,10 +14,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> doSortList() {
-        storage.sort(resumeComparator);
-        int size = storage.size();
-        return List.of(storage.toArray(new Resume[size]));
+    public List<Resume> doCopyAll() {
+        return storage;
     }
 
     @Override
@@ -26,7 +24,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Integer findIndex(String uuid) {
+    protected Integer findSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (uuid.equals(storage.get(i).getUuid())) {
                 return i;
@@ -41,13 +39,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume resume) {
-        storage.set((Integer) searchKey, resume);
+    protected void doUpdate(Object searchKey, Resume r) {
+        storage.set((Integer) searchKey, r);
     }
 
     @Override
-    protected void doSave(Object searchKey, Resume resume) {
-        storage.add(resume);
+    protected void doSave(Object searchKey, Resume r) {
+        storage.add(r);
     }
 
     @Override

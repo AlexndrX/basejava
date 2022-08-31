@@ -7,9 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+
 public class MapResumeStorage extends AbstractStorage {
 
-    private final Map<Resume, String> storage = new LinkedHashMap<>();
+    private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -17,10 +19,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> doSortList() {
-        List<Resume> resumes = new ArrayList<>(storage.keySet());
-        resumes.sort(resumeComparator);
-        return List.copyOf(resumes);
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -29,40 +29,32 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume findIndex(String uuid) {
-        for (Map.Entry<Resume, String> entry : storage.entrySet()) {
-            if (entry.getValue().equals(uuid)) {
-                return entry.getKey();
-            }
-        }
-        return null;
+    protected Resume findSearchKey(String uuid) {
+        return storage.get(uuid);
     }
 
     @Override
     protected Resume doGet(Object searchKey) {
-        if (storage.containsKey((Resume) searchKey)) {
-            return (Resume) searchKey;
-        }
-        return null;
+        return (Resume) searchKey;
     }
 
     @Override
     protected void doUpdate(Object searchKey, Resume r) {
-        storage.replace((Resume) searchKey, ((Resume) searchKey).getUuid());
+        storage.replace(r.getUuid(), r);
     }
 
     @Override
     protected void doSave(Object searchKey, Resume r) {
-        storage.put((Resume) searchKey, ((Resume) searchKey).getUuid());
+        storage.put(r.getUuid(), r);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        storage.remove((Resume) searchKey);
+        storage.remove(((Resume) searchKey).getUuid());
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return storage.containsKey((Resume) searchKey);
+        return !isNull(searchKey);
     }
 }
