@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
 
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
@@ -34,27 +34,27 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return (Resume) searchKey;
+    protected Resume doGet(Resume resume) {
+        return resume;
     }
 
     @Override
-    protected void doUpdate(Object searchKey, Resume r) {
+    protected void doUpdate(Resume resume, Resume r) {
         storage.replace(r.getUuid(), r);
     }
 
     @Override
-    protected void doSave(Object searchKey, Resume r) {
+    protected void doSave(Resume resume, Resume r) {
         storage.put(r.getUuid(), r);
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        storage.remove(((Resume) searchKey).getUuid());
+    protected void doDelete(Resume resume) {
+        storage.remove(resume.getUuid());
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return !isNull(searchKey);
+    protected boolean isExist(Resume resume) {
+        return !isNull(resume);
     }
 }
