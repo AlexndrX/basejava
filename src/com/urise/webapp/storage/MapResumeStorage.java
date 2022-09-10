@@ -19,7 +19,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected List<Resume> doCopyAll() {
+    public List<Resume> doCopyAll() {
         return new ArrayList<>(storage.values());
     }
 
@@ -34,8 +34,8 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected Resume doGet(Resume resume) {
-        return resume;
+    protected Resume doGet(Resume r) {
+        return r;
     }
 
     @Override
@@ -49,12 +49,12 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected void doDelete(Resume resume) {
-        storage.remove(resume.getUuid());
+    protected void doDelete(Resume r) {
+        storage.remove(r.getUuid());
     }
 
     @Override
-    protected boolean isExist(Resume resume) {
-        return !isNull(resume);
+    protected boolean isExist(Resume r) {
+        return !isNull(r);
     }
 }

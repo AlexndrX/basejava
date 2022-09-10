@@ -56,7 +56,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         return searchKey >= 0;
     }
 
-    protected abstract void addResume(Resume r, int index);
+    protected abstract void addResume(Resume r, int searchKey);
 
-    protected abstract void deleteResume(int index);
+    protected abstract void deleteResume(int searchKey);
 }
