@@ -1,7 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -11,6 +10,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+    Map<ContactType, String> contacts = new LinkedHashMap<>();
+    public Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
 
     public Resume() {
         this(UUID.randomUUID().toString());
@@ -33,6 +34,25 @@ public class Resume {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+
+    public void showResume() {
+        System.out.println(getFullName());
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            System.out.println(entry.getKey() + "  " + entry.getValue());
+        }
+        System.out.println("-----------------------------------------------------------------------------------------");
+        for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+            System.out.println(entry.getKey() + "  " + "\n" + entry.getValue());
+        }
     }
 
     @Override
