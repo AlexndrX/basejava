@@ -4,12 +4,12 @@ public enum ContactType {
     PHONE ("Тел.: "),
     SKYPE ("Skype: "),
     MAIL ("Почта: "),
-    LINKEDIN (""),
-    GITHUB (""),
-    STACKOVERFLOW (""),
-    HOMEPAGE ("");
+    LINKEDIN ("LINKEDIN"),
+    GITHUB ("GITHUB"),
+    STACKOVERFLOW ("STACKOVERFLOW"),
+    HOMEPAGE ("HOMEPAGE");
 
-    private String subTitle;
+    private final String subTitle;
 
     ContactType(String subTitle) {
         this.subTitle = subTitle;

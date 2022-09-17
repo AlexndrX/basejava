@@ -10,8 +10,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    Map<ContactType, String> contacts = new LinkedHashMap<>();
-    public Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
+    private Map<ContactType, String> contacts = new LinkedHashMap<>();
+    private Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
 
     public Resume() {
         this(UUID.randomUUID().toString());
