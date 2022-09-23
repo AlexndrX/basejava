@@ -7,7 +7,7 @@ import java.util.List;
 
 public class OrganizationSection extends AbstractSection {
 
-    List<Organization> organizations = new ArrayList<>();
+    private final List<Organization> organizations = new ArrayList<>();
 
     public List<Organization> getOrganizations() {
         return organizations;

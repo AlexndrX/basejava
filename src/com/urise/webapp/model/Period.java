@@ -3,10 +3,10 @@ package com.urise.webapp.model;
 import java.time.LocalDate;
 
 public class Period {
-    StringBuilder title;
-    LocalDate start;
-    LocalDate end;
-    StringBuilder description;
+    private final StringBuilder title;
+    private final LocalDate start;
+    private final LocalDate end;
+    private StringBuilder description;
 
     public Period(StringBuilder title, LocalDate start, LocalDate end) {
         this.title = new StringBuilder(title);

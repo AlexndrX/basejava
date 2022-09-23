@@ -10,8 +10,8 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private Map<ContactType, String> contacts = new LinkedHashMap<>();
-    private Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
+    private final Map<ContactType, String> contacts = new LinkedHashMap<>();
+    private final Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
 
     public Resume() {
         this(UUID.randomUUID().toString());
@@ -40,8 +40,16 @@ public class Resume {
         return contacts;
     }
 
+    public String getContact(ContactType type){
+        return contacts.get(type);
+    }
+
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
+    }
+
+    public AbstractSection getSection(SectionType type){
+        return sections.get(type);
     }
 
     public void showResume() {
