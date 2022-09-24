@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.urise.webapp.storage.ResumeTestData.createResume;
+
 public abstract class AbstractStorageTest {
 
     protected final Storage storage;
@@ -26,10 +28,10 @@ public abstract class AbstractStorageTest {
     private static final String FULL_NAME3 = "name3";
     private static final String FULL_NAME4 = "name4";
 
-    private static final Resume RESUME_1 = new Resume(UUID_1, FULL_NAME1);
-    private static final Resume RESUME_2 = new Resume(UUID_2, FULL_NAME2);
-    private static final Resume RESUME_3 = new Resume(UUID_3, FULL_NAME3);
-    protected static final Resume RESUME_4 = new Resume(UUID_4, FULL_NAME4);
+    private static final Resume RESUME_1 = createResume(UUID_1, FULL_NAME1);
+    private static final Resume RESUME_2 = createResume(UUID_2, FULL_NAME2);
+    private static final Resume RESUME_3 = createResume(UUID_3, FULL_NAME3);
+    protected static final Resume RESUME_4 = createResume(UUID_4, FULL_NAME4);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;

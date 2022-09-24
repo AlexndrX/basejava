@@ -30,6 +30,7 @@ public class MainFile {
         File file = new File(filePath);
         try {
             System.out.println(file.getCanonicalPath());
+            System.out.println(file.getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException("Error", e);
         }

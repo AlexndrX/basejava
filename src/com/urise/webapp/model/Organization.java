@@ -11,7 +11,7 @@ public class Organization {
 
     public Organization(String title, Period... period) {
         this.title = title;
-        assert false;
+        //assert false;
         periods = new ArrayList<>();
         periods.addAll(Arrays.asList(period));
     }
