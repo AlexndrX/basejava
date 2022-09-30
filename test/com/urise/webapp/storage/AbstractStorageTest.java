@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -15,6 +16,8 @@ import java.util.List;
 import static com.urise.webapp.storage.ResumeTestData.createResume;
 
 public abstract class AbstractStorageTest {
+
+    protected static final File STORAGE_DIR = new File("C:\\Users\\Professional\\IdeaProjects\\basejava\\storage");
 
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
@@ -54,8 +57,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        storage.update(RESUME_2);
-        Assert.assertSame(RESUME_2, storage.get((UUID_2)));
+        Resume newResume = new Resume(UUID_2, "New Name");
+        storage.update(newResume);
+        Assert.assertEquals(newResume, storage.get((UUID_2)));
     }
 
     @Test
@@ -95,7 +99,7 @@ public abstract class AbstractStorageTest {
     }
 
     public void assertGet(Resume r) {
-        Assert.assertSame(r, storage.get(r.getUuid()));
+        Assert.assertEquals(r, storage.get(r.getUuid()));
     }
 
     @Test(expected = NotExistStorageException.class)

@@ -1,10 +1,16 @@
 package com.urise.webapp.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Organization {
+public class Organization implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     String title;
     String webSite;
     List<Period> periods;

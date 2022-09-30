@@ -1,11 +1,16 @@
 package com.urise.webapp.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume {
+public class Resume implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     // Unique identifier
     private final String uuid;
@@ -40,7 +45,7 @@ public class Resume {
         return contacts;
     }
 
-    public String getContact(ContactType type){
+    public String getContact(ContactType type) {
         return contacts.get(type);
     }
 
@@ -48,7 +53,7 @@ public class Resume {
         return sections;
     }
 
-    public AbstractSection getSection(SectionType type){
+    public AbstractSection getSection(SectionType type) {
         return sections.get(type);
     }
 
