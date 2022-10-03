@@ -18,6 +18,7 @@ import static com.urise.webapp.storage.ResumeTestData.createResume;
 public abstract class AbstractStorageTest {
 
     protected static final File STORAGE_DIR = new File("C:\\Users\\Professional\\IdeaProjects\\basejava\\storage");
+    protected static final String STORAGE_PATH = "C:\\Users\\Professional\\IdeaProjects\\basejava\\storage\\";
 
     protected final Storage storage;
     private static final String UUID_1 = "uuid1";
