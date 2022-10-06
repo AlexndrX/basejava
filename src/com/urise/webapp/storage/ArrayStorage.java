@@ -20,7 +20,6 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void addResume(Resume r, int searchKey) {
         storage[count] = r;
-        count++;
     }
 
     @Override

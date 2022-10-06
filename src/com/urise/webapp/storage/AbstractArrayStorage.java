@@ -35,7 +35,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected void doUpdate(Integer searchKey, Resume r) {
-        addResume(r, searchKey);
+        storage[searchKey] = r;
     }
 
     @Override
@@ -44,6 +44,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
             throw new StorageException("Storage overflow", r.getUuid());
         }
         addResume(r, searchKey);
+        count++;
     }
 
     @Override

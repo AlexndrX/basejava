@@ -10,10 +10,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
-    private Path directory;
+    private final Path directory;
 
     protected AbstractPathStorage(String dir) {
         directory = Paths.get(dir);
@@ -26,44 +27,38 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     public void clear() {
         try {
-            Files.list(directory).forEach(this::doDelete);
+            getStreamPath(directory).forEach(this::doDelete);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
+            throw new StorageException("Path delete error", null, e);
         }
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        if (directory == null) {
-            throw new StorageException("Directory is null", null);
-        }
         try {
-            List<String> list = Files.readAllLines(directory);
+            List<Path> list = getStreamPath(directory).toList();
             List<Resume> resumeList = new ArrayList<>();
-            for (String s : list) {
-                resumeList.add(doGet(Paths.get(s)));
+            for (Path path : list) {
+                resumeList.add(doGet(path));
             }
             return resumeList;
         } catch (IOException e) {
-            throw new StorageException("IO error", null);
+            throw new StorageException("It isn't a directory", directory.getFileName().toString(), e);
         }
     }
 
     @Override
     public int size() {
-        if (Files.notExists(directory)) {
-            throw new StorageException("Directory is null", null);
-        }
         try {
-            return (int) Files.list(directory).count();
+            return (int) getStreamPath(directory).count();
         } catch (IOException e) {
-            throw new StorageException("IO Error", directory.getFileName().toString(), e);
+            throw new StorageException("It isn't a directory", directory.getFileName().toString(), e);
         }
     }
 
     @Override
     protected Path findSearchKey(String uuid) {
-        return Paths.get(uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
@@ -71,7 +66,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             return doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("IO Error", directory.getFileName().toString(), e);
+            throw new StorageException("File get error", directory.getFileName().toString(), e);
         }
     }
 
@@ -80,7 +75,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         try {
             doWrite(new BufferedOutputStream(Files.newOutputStream(path)), r);
         } catch (IOException e) {
-            throw new StorageException("IO Error", directory.getFileName().toString(), e);
+            throw new StorageException("File update error", directory.getFileName().toString(), e);
         }
     }
 
@@ -88,10 +83,10 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected void doSave(Path path, Resume r) {
         try {
             Files.createFile(path);
-            doWrite(new BufferedOutputStream(Files.newOutputStream(path)), r);
         } catch (IOException e) {
-            throw new StorageException("IO Error", directory.getFileName().toString(), e);
+            throw new StorageException("File create error", directory.getFileName().toString(), e);
         }
+        doUpdate(path, r);
     }
 
     @Override
@@ -112,4 +107,14 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     protected abstract Resume doRead(InputStream is) throws IOException;
 
+    private Stream<Path> getStreamPath(Path directory) throws IOException{
+        if (directory == null) {
+            throw new StorageException("Directory is null", null);
+        }
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("It isn't a directory", null, e);
+        }
+    }
 }

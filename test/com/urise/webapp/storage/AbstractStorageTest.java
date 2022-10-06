@@ -8,12 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.urise.webapp.storage.ResumeTestData.createResume;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
 
@@ -60,7 +58,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume newResume = new Resume(UUID_2, "New Name");
         storage.update(newResume);
-        Assert.assertEquals(newResume, storage.get((UUID_2)));
+        assertEquals(newResume, storage.get(UUID_2));
     }
 
     @Test

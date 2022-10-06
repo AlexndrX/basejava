@@ -20,7 +20,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         int indexOfResume = Math.abs(searchKey + 1);
         System.arraycopy(storage, indexOfResume, storage, indexOfResume + 1, count - indexOfResume);
         storage[indexOfResume] = r;
-        count++;
     }
 
     @Override
