@@ -12,12 +12,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
 
-    protected AbstractPathStorage(String dir) {
+    Serializator serializator;
+
+    protected PathStorage(String dir, Serializator serializator) {
         directory = Paths.get(dir);
+        this.serializator = serializator;
         Objects.requireNonNull(directory, "Directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
@@ -64,7 +67,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return serializator.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File get error", directory.getFileName().toString(), e);
         }
@@ -73,7 +76,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Path path, Resume r) {
         try {
-            doWrite(new BufferedOutputStream(Files.newOutputStream(path)), r);
+            serializator.doWrite(new BufferedOutputStream(Files.newOutputStream(path)), r);
         } catch (IOException e) {
             throw new StorageException("File update error", directory.getFileName().toString(), e);
         }
@@ -103,11 +106,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         return Files.exists(path);
     }
 
-    protected abstract void doWrite(OutputStream os, Resume r) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
-    private Stream<Path> getStreamPath(Path directory) throws IOException{
+    private Stream<Path> getStreamPath(Path directory) throws IOException {
         if (directory == null) {
             throw new StorageException("Directory is null", null);
         }
