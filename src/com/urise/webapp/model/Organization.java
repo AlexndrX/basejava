@@ -1,19 +1,25 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    String title;
-    String webSite;
-    List<Period> periods;
+    private String title;
+    private String webSite;
+    private List<Period> periods;
+
+    public Organization() {
+    }
 
     public Organization(String title, Period... period) {
         this.title = title;

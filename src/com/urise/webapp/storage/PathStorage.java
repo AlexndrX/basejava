@@ -4,7 +4,9 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.serialisation.Serializator;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,9 +22,9 @@ public class PathStorage extends AbstractStorage<Path> {
     private final Serializator serializator;
 
     protected PathStorage(String dir, Serializator serializator) {
-        directory = Paths.get(dir);
+        Objects.requireNonNull(dir, "Directory must not be null");
         this.serializator = serializator;
-        Objects.requireNonNull(directory, "Directory must not be null");
+        directory = Paths.get(dir);
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
@@ -30,34 +32,24 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            getStreamPath(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
-        }
+        getStreamPath().forEach(this::doDelete);
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        try {
-            List<Path> list = getStreamPath(directory).toList();
-            List<Resume> resumeList = new ArrayList<>();
-            for (Path path : list) {
-                resumeList.add(doGet(path));
-            }
-            return resumeList;
-        } catch (IOException e) {
-            throw new StorageException("It isn't a directory", directory.getFileName().toString(), e);
+        List<Path> list = getStreamPath().toList();
+        List<Resume> resumeList = new ArrayList<>();
+        for (Path path : list) {
+            resumeList.add(doGet(path));
         }
+        return resumeList;
+
+        //return getStreamPath().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     public int size() {
-        try {
-            return (int) getStreamPath(directory).count();
-        } catch (IOException e) {
-            throw new StorageException("It isn't a directory", directory.getFileName().toString(), e);
-        }
+        return (int) getStreamPath().count();
     }
 
     @Override
@@ -70,7 +62,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return serializator.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File get error", directory.getFileName().toString(), e);
+            throw new StorageException("File get error", getFileName(path), e);
         }
     }
 
@@ -79,7 +71,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             serializator.doWrite(new BufferedOutputStream(Files.newOutputStream(path)), r);
         } catch (IOException e) {
-            throw new StorageException("File update error", directory.getFileName().toString(), e);
+            throw new StorageException("File update error", getFileName(path), e);
         }
     }
 
@@ -88,7 +80,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("File create error", directory.getFileName().toString(), e);
+            throw new StorageException("File create error", getFileName(path), e);
         }
         doUpdate(path, r);
     }
@@ -98,7 +90,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
+            throw new StorageException("Path delete error", getFileName(path), e);
         }
     }
 
@@ -107,14 +99,15 @@ public class PathStorage extends AbstractStorage<Path> {
         return Files.exists(path);
     }
 
-    private Stream<Path> getStreamPath(Path directory) throws IOException {
-        if (directory == null) {
-            throw new StorageException("Directory is null", null);
-        }
+    private String getFileName(Path path){
+        return path.getFileName().toString();
+    }
+
+    private Stream<Path> getStreamPath() {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("It isn't a directory", null, e);
+            throw new StorageException("Directory read error", e);
         }
     }
 }

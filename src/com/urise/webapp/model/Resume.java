@@ -1,12 +1,20 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Serializable {
 
     @Serial
@@ -17,6 +25,8 @@ public class Resume implements Serializable {
     private final String fullName;
     private final Map<ContactType, String> contacts = new LinkedHashMap<>();
     private final Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
+
+    //public Resume(){}
 
     public Resume() {
         this(UUID.randomUUID().toString());

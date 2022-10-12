@@ -1,18 +1,24 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Period implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final StringBuilder title;
-    private final LocalDate start;
-    private final LocalDate end;
+    private StringBuilder title;
+    private  LocalDate start;
+    private  LocalDate end;
     private StringBuilder description;
+
+    public Period() {
+    }
 
     public Period(StringBuilder title, LocalDate start, LocalDate end) {
         this.title = new StringBuilder(title);
