@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
@@ -37,14 +37,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        List<Path> list = getStreamPath().toList();
-        List<Resume> resumeList = new ArrayList<>();
-        for (Path path : list) {
-            resumeList.add(doGet(path));
-        }
-        return resumeList;
-
-        //return getStreamPath().map(this::doGet).collect(Collectors.toList());
+        return getStreamPath().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override

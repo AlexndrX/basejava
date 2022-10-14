@@ -1,15 +1,10 @@
 package com.urise.webapp.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends AbstractSection {
 
-    @Serial
     private static final long serialVersionUID = 1L;
 
     private final List<String> strings = new ArrayList<>();
